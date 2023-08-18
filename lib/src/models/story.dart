@@ -1,10 +1,10 @@
 import 'user.dart';
 
 class Story {
-  User storyPoster;
-  List<User> viewedBy = [];
+  MyUser storyPoster;
+  List<MyUser> viewedBy = [];
   int noOfViews = 0;
-  List<User> likedBy = [];
+  List<MyUser> likedBy = [];
   int noOfLikes = 0;
 
   Story(this.storyPoster);

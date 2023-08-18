@@ -1,8 +1,8 @@
 import 'package:dash_chat/src/models/user.dart';
 
 class Message {
-  User sender;
-  List<User> recievers;
+  MyUser sender;
+  List<MyUser> recievers;
   String cipher;
   String messageValue;
 

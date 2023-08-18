@@ -1,13 +1,15 @@
 import 'post.dart';
 
-class User {
-  String uid;
-  String username;
-  String bio;
+class MyUser {
+  String? email;
+  String? password;
+  String? uid;
+  String? username;
+  String bio = "";
   int postNums = 0;
-  List<User> followers = [];
-  List<User> following = [];
+  List<MyUser> followers = [];
+  List<MyUser> following = [];
   List<Post> posts = [];
 
-  User(this.uid, this.username, this.bio );
+  MyUser(this.uid);
 }
