@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dash_chat/src/screens/afterAuth/loadingScreen.dart';
 import 'package:dash_chat/src/services/database.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,7 @@ class StreamWidget extends StatefulWidget {
 class _StreamWidgetState extends State<StreamWidget> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = true;
-  MyUser? _currentUser;
+  dynamic _currentUser = null;
   dynamic _userData;
   @override
   void initState() {
@@ -41,15 +43,16 @@ class _StreamWidgetState extends State<StreamWidget> {
       String uid = user.uid;
       print(uid);
       Database _db = Database();
-      _userData = _db.fetchUserFromDB(uid).then((value) => setState(() {
+      dynamic data;
+      data = _db.fetchUserFromDB(uid).then((value) => setState(() {
             if (value != null) {
               _userData = value;
-            } else {}
+              _currentUser = MyUser(uid);
+              _isLoading = false;
+            } else {
+              _isLoading = true;
+            }
           }));
-      setState(() {
-        _currentUser = MyUser(uid);
-        _isLoading = false;
-      });
     } else {
       setState(() {
         _currentUser = null;
