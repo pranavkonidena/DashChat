@@ -14,19 +14,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   @override
   Widget build(BuildContext context) {
+    
+
     return MaterialApp(
         routes: routes,
+        
         home: Scaffold(
+
             body: Column(
+              
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/login.png')),
+      ),
+            ),
             const Center(
                 child: Text("Welcome Back",
                     style:
-                        TextStyle(fontSize: 50, fontWeight: FontWeight.w600))),
+                        TextStyle(fontSize: 50, fontFamily: 'Montserrat',))),
             const LoginForm(),
             ElevatedButton(
                 onPressed: () {
@@ -38,7 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: const Text("SignUp"))
           ],
-        )));
+        ))
+        );
   }
 }
 
@@ -50,6 +63,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  
   String email = "";
   String password = "";
   final _formKey = GlobalKey<FormState>();

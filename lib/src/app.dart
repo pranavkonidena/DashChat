@@ -8,7 +8,7 @@ import 'screens/beforeAuth/register.dart';
 import './screens/wrapper.dart';
 import './models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './screens/beforeAuth/login.dart';
+import 'screens/beforeAuth/login.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

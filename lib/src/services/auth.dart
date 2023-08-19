@@ -4,17 +4,17 @@ import '../models/user.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   
-  Stream<User>? get user {
-    _auth.authStateChanges().listen((
-      User? user,
-    ) {
-      if (user == null) {
-        print("User signed out!");
-      } else {
-        print("User with ${user.uid} signed in!");
-      }
-    });
-  }
+  // Stream<User>? get user {
+  //   _auth.authStateChanges().listen((
+  //     User? user,
+  //   ) {
+  //     if (user == null) {
+  //       print("User signed out!");
+  //     } else {
+  //       print("User with ${user.uid} signed in!");
+  //     }
+  //   });
+  // }
 
   MyUser convertToUser(dynamic result) {
     return MyUser(result.user.uid);

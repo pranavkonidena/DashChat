@@ -7,7 +7,7 @@ import '../../models/user.dart';
 import '../../services/database.dart';
 import '../../constants/errorSnackBar.dart';
 import '../afterAuth/profileBuilder.dart';
-import './login.dart';
+import 'login.dart';
 import '../afterAuth/home.dart';
 
 class RegisterScreen extends StatefulWidget {
