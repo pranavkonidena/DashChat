@@ -1,3 +1,4 @@
+import 'package:dash_chat/src/constants/routes.dart';
 import 'package:dash_chat/src/screens/afterAuth/home.dart';
 import 'package:dash_chat/src/screens/beforeAuth/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,16 +13,18 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-    '/register': (context) => RegisterScreen(),
-    '/login' : (context) => LoginScreen(),
-  },
+      routes: routes,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-          
-            return HomePage();
+          if (snapshot.connectionState == ConnectionState.active) {
+            final user = snapshot.data;
+            if (user != null) {
+              print(user);
+              return HomePage();
+            } else {
+              return LoginScreen();
+            }
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),

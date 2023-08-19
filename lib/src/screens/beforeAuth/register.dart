@@ -35,7 +35,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const LoginForm(),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/login", arguments: "Test");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                    );
                 },
                 child: const Text("LogIn"))
           ],
@@ -111,11 +115,12 @@ class _LoginFormState extends State<LoginForm> {
                       dynamic user =
                           await _auth.registerWithEmail(email, password);
                       Database _db = Database();
-                      user.password = password;
-                      user.email = email;
-                      await _db.registerToDB(user);
+                      setState(() {
+                        user.password = password;
+                        user.email = email;
+                      });
                       Navigator.pushNamed(context, "/profileBuilder",
-                          arguments: user.uid);
+                          arguments: user);
                     } catch (e) {
                       dynamic emailUsed = SnackBar(
                         content: Text(e.toString()),

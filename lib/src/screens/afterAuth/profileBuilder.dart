@@ -17,7 +17,7 @@ class _ProfileBuilderState extends State<ProfileBuilder> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final uid = ModalRoute.of(context)?.settings.arguments as dynamic;
+    final user = ModalRoute.of(context)?.settings.arguments as MyUser;
 
     return MaterialApp(
         routes: routes,
@@ -73,7 +73,7 @@ class _ProfileBuilderState extends State<ProfileBuilder> {
                       child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              MyUser user = MyUser(uid);
+                             
                               setState(() {
                                 user.username = username;
                                 user.bio = bio;
@@ -81,7 +81,7 @@ class _ProfileBuilderState extends State<ProfileBuilder> {
                               Database _db = Database();
                               await _db.registerToDB(user);
                               Navigator.pushNamed(context, "/home",
-                                  arguments: uid);
+                                  arguments: user.uid);
                             }
                           },
                           child: Text("Go to home")),

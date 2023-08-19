@@ -1,25 +1,24 @@
-import 'package:dash_chat/src/models/post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import '../models/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Stream<MyUser>? get user {
+  
+  Stream<User>? get user {
     _auth.authStateChanges().listen((
       User? user,
     ) {
       if (user == null) {
-        // print("User signed out!");
+        print("User signed out!");
       } else {
-        // print("User with ${user.uid} signed in!");
+        print("User with ${user.uid} signed in!");
       }
     });
   }
 
   MyUser convertToUser(dynamic result) {
     return MyUser(result.user.uid);
+    
   }
 
   Future registerWithEmail(String email, String password) async {

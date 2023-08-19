@@ -169,6 +169,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3+5"
+  flare_flutter:
+    dependency: "direct main"
+    description:
+      name: flare_flutter
+      sha256: "99d63c60f00fac81249ce6410ee015d7b125c63d8278a30da81edf3317a1f6a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -182,6 +190,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      sha256: b39c753e909d4796906c5696a14daf33639a76e017136c8d82bf3e620ce5bb8e
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

@@ -1,4 +1,5 @@
 import 'package:dash_chat/src/constants/routes.dart';
+import 'package:dash_chat/src/screens/afterAuth/home.dart';
 import 'package:dash_chat/src/screens/beforeAuth/register.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth.dart';
@@ -15,10 +16,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    
-  
     return MaterialApp(
-       routes: routes,
+        routes: routes,
         home: Scaffold(
             body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,14 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const LoginForm(),
             ElevatedButton(
                 onPressed: () {
-               
-
-                  Navigator.pushNamed(
+                  Navigator.push(
                     context,
-                    "/register",
-                    arguments: {
-                      "username": "Hello",
-                    },
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen()),
                   );
                 },
                 child: const Text("SignUp"))
@@ -112,6 +107,10 @@ class _LoginFormState extends State<LoginForm> {
                     try {
                       dynamic user =
                           await _auth.loginWithEmail(email, password);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()));
                     } catch (e) {
                       dynamic error = SnackBar(
                         content: Text(e.toString()),
