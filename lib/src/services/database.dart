@@ -51,4 +51,17 @@ class Database {
       print('Error fetching data: $e');
     }
   }
+
+  Future<dynamic> getAllUsers() async {
+    List<dynamic> usersList = [];
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
+    await usersCollection.get().then((querySnapshot) {
+      for (var result in querySnapshot.docs) {
+        usersList.add(result.data());
+      }
+    });
+
+    return usersList;
+  }
 }

@@ -71,7 +71,7 @@ class _StreamWidgetState extends State<StreamWidget> {
             children: [
               Text(
                 _userData["username"],
-                style: TextStyle(
+                style: const TextStyle(
                     fontFamily: "Montserrat",
                     fontSize: 30,
                     color: Colors.black87),
@@ -79,7 +79,7 @@ class _StreamWidgetState extends State<StreamWidget> {
               Text(_userData["bio"]),
               Text(_userData["email"]),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text("Following "),
+                const Text("Following "),
                 Text(_userData["following"].length.toString()),
               ]),
               Row(

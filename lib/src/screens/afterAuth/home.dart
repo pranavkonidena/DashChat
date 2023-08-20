@@ -1,4 +1,5 @@
 import 'package:dash_chat/src/constants/routes.dart';
+import 'package:dash_chat/src/screens/afterAuth/followPage.dart';
 import 'package:dash_chat/src/screens/afterAuth/loadingScreen.dart';
 import 'package:dash_chat/src/screens/afterAuth/profilePage.dart';
 import 'package:dash_chat/src/screens/beforeAuth/login.dart';
@@ -25,10 +26,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<Widget> _pages = [StreamWidget(), PostsPage(), ProfilePage()];
+  List<Widget> _pages = [
+    StreamWidget(),
+    FollowPage(),
+    PostsPage(),
+    ProfilePage()
+  ];
   AuthService _auth = AuthService();
   Widget build(BuildContext context) {
-    if (_selectedIndex == 2) {
+    if (_selectedIndex == 3) {
       return MaterialApp(
           routes: routes,
           home: Scaffold(
@@ -69,6 +75,7 @@ class _HomePageState extends State<HomePage> {
             body: _pages.elementAt(_selectedIndex),
             bottomNavigationBar: BottomNavigationBar(
               backgroundColor: Colors.black,
+              type: BottomNavigationBarType.fixed,
               selectedItemColor: Colors.amberAccent,
               unselectedItemColor: Colors.white,
               selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -78,6 +85,11 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),
                   label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  backgroundColor: Colors.black,
+                  icon: Icon(Icons.search),
+                  label: 'Search',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.post_add),
@@ -131,6 +143,7 @@ class _HomePageState extends State<HomePage> {
             body: _pages.elementAt(_selectedIndex),
             bottomNavigationBar: BottomNavigationBar(
               backgroundColor: Colors.black,
+              type: BottomNavigationBarType.fixed,
               selectedItemColor: Colors.amberAccent,
               unselectedItemColor: Colors.white,
               selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -140,6 +153,11 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),
                   label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  backgroundColor: Colors.black,
+                  icon: Icon(Icons.search),
+                  label: 'Search',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.post_add),
@@ -168,6 +186,7 @@ class _StreamWidgetState extends State<StreamWidget> {
   bool _isLoading = true;
   MyUser? _currentUser;
   dynamic _userData;
+
   @override
   void initState() {
     super.initState();
@@ -197,18 +216,15 @@ class _StreamWidgetState extends State<StreamWidget> {
     }
   }
 
-  dynamic returnUserData() {
-    return _userData;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_currentUser != null) {
       return Scaffold(
-        body: Text("Hi"),
-      );
+          body: Column(
+        children: [],
+      ));
     } else {
-      return LoginScreen();
+      return loadingScreen();
     }
   }
 }
