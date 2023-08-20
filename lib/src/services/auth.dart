@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   
   // Stream<User>? get user {
   //   _auth.authStateChanges().listen((
@@ -18,10 +17,11 @@ class AuthService {
 
   MyUser convertToUser(dynamic result) {
     return MyUser(result.user.uid);
-    
   }
 
   Future registerWithEmail(String email, String password) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
       final result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -32,6 +32,8 @@ class AuthService {
   }
 
   Future loginWithEmail(String email, String password) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
       final result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -42,10 +44,13 @@ class AuthService {
   }
 
   Future signOut() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    await _auth.signOut();
     try {
-      await _auth.signOut();
-    } catch (e) {}
+      
+    } catch (e) {
+      print("Error");
+      print(e);
+    }
   }
-
- 
 }

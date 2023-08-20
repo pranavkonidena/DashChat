@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:dash_chat/src/screens/afterAuth/loadingScreen.dart';
+import 'package:dash_chat/src/screens/beforeAuth/login.dart';
+import 'package:dash_chat/src/screens/beforeAuth/register.dart';
+import 'package:dash_chat/src/services/auth.dart';
 import 'package:dash_chat/src/services/database.dart';
 import 'package:flutter/material.dart';
 import '../../models/user.dart';
@@ -88,7 +91,18 @@ class _StreamWidgetState extends State<StreamWidget> {
                   children: [
                     Text("Followers "),
                     Text(_userData["followers"].length.toString()),
-                  ])
+                  ]),
+              ElevatedButton(
+                  onPressed: () async {
+                    Database _db = Database();
+                    await _db.deleteUser(_userData["uid"]);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  child: Text("Delete account"))
             ],
           ),
         );

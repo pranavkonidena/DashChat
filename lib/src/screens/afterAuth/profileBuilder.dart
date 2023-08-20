@@ -20,6 +20,7 @@ class _ProfileBuilderState extends State<ProfileBuilder> {
     final user = ModalRoute.of(context)?.settings.arguments as MyUser;
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         routes: routes,
         home: Scaffold(
             body:

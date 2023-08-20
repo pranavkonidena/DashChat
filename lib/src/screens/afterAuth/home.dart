@@ -32,10 +32,11 @@ class _HomePageState extends State<HomePage> {
     PostsPage(),
     ProfilePage()
   ];
-  AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
   Widget build(BuildContext context) {
     if (_selectedIndex == 3) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
           routes: routes,
           home: Scaffold(
             appBar: AppBar(
@@ -105,6 +106,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       return MaterialApp(
           routes: routes,
+          debugShowCheckedModeBanner: false,
           home: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.black87,

@@ -1,3 +1,6 @@
+import 'package:dash_chat/src/screens/afterAuth/othersProfile.dart';
+import 'package:dash_chat/src/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../services/database.dart';
 import './loadingScreen.dart';
@@ -16,12 +19,13 @@ class _FollowPageState extends State<FollowPage> {
   List<String> matchedQueries = [];
   void getAllUsers() {
     Database _db = Database();
+    String currentUID = FirebaseAuth.instance.currentUser!.uid;
     _db.getAllUsers().then((value) {
       if (value != null) {
         setState(() {
           allUsers = value;
           allUsers.forEach((element) {
-            if (element["username"] != null) {
+            if (element["username"] != null && element["uid"] != currentUID) {
               searchterms.add(element["username"]);
             }
           });
@@ -56,7 +60,8 @@ class _FollowPageState extends State<FollowPage> {
                     query = value;
                   });
                   showSearch(
-                      context: context, delegate: CustomSearchDelegate(searchterms));
+                      context: context,
+                      delegate: CustomSearchDelegate(searchterms));
                   // for (var item in searchterms) {
                   //   if ((item as String)
                   //       .toLowerCase()
@@ -104,10 +109,8 @@ class _FollowPageState extends State<FollowPage> {
 }
 
 class CustomSearchDelegate extends SearchDelegate {
-  
   // Demo list to show querying
-  List<dynamic> searchTerms = [
-  ];
+  List<dynamic> searchTerms = [];
   CustomSearchDelegate(this.searchTerms);
 
   // first overwrite to
@@ -140,7 +143,8 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     List<String> matchQuery = [];
     for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+      if (fruit.toLowerCase().contains(query.toLowerCase()) &&
+          query.length > 1) {
         matchQuery.add(fruit);
       }
     }
@@ -171,6 +175,15 @@ class CustomSearchDelegate extends SearchDelegate {
         var result = matchQuery[index];
         return ListTile(
           title: Text(result),
+          onTap: () {
+            print(result);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OthersProfile(username: result),
+              ),
+            );
+          },
         );
       },
     );
