@@ -32,147 +32,89 @@ class _HomePageState extends State<HomePage> {
     PostsPage(),
     ProfilePage()
   ];
+  List<Icon> _icons = [
+    Icon(
+      Icons.message,
+      size: 30,
+    ),
+    Icon(
+      Icons.message,
+      size: 30,
+    ),
+    Icon(
+      Icons.send,
+      size: 30,
+    ),
+    Icon(Icons.exit_to_app_rounded, size: 30)
+  ];
   final AuthService _auth = AuthService();
   Widget build(BuildContext context) {
-    if (_selectedIndex == 3) {
-      return MaterialApp(
+    return MaterialApp(
         debugShowCheckedModeBanner: false,
-          routes: routes,
-          home: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.black87,
-              centerTitle: false,
-              title: const Padding(
-                padding: EdgeInsets.only(left: 12.0),
-                child: Text(
-                  "DashChat",
-                  textAlign: TextAlign.start,
-                  style:
-                      TextStyle(fontSize: 40, fontFamily: "ShadowsIntoLight"),
-                ),
+        routes: routes,
+        home: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black87,
+            centerTitle: false,
+            title: const Padding(
+              padding: EdgeInsets.only(left: 12.0),
+              child: Text(
+                "DashChat",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 40, fontFamily: "ShadowsIntoLight"),
               ),
-              actions: [
-                IconButton(
-                  onPressed: () async {
+            ),
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  if (_selectedIndex == 3) {
                     await _auth.signOut();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const LoginScreen()),
                     );
-                  },
-                  // child: Text("SignOut" , style: TextStyle(
-                  //   fontSize: 15,
-                  //   color: Colors.white,
-                  //   fontFamily: "Montserrat"
-                  // ),)
-                  icon: Icon(
-                    Icons.logout,
-                    size: 30,
-                  ),
-                )
-              ],
-            ),
-            body: _pages.elementAt(_selectedIndex),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.black,
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Colors.amberAccent,
-              unselectedItemColor: Colors.white,
-              selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-              onTap: _onItemTapped,
-              currentIndex: _selectedIndex,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  backgroundColor: Colors.black,
-                  icon: Icon(Icons.search),
-                  label: 'Search',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.post_add),
-                  label: 'Posts',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.account_box_outlined),
-                  label: 'Profile',
-                ),
-              ],
-            ),
-          ));
-    } else {
-      return MaterialApp(
-          routes: routes,
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.black87,
-              centerTitle: false,
-              title: const Padding(
-                padding: EdgeInsets.only(left: 12.0),
-                child: Text(
-                  "DashChat",
-                  textAlign: TextAlign.start,
-                  style:
-                      TextStyle(fontSize: 40, fontFamily: "ShadowsIntoLight"),
-                ),
+                  } else if (_selectedIndex == 2) {
+                    //Post icon
+                    print("Posting");
+                  } else {
+                    //Message icon
+                  }
+                },
+                icon: _icons.elementAt(_selectedIndex),
+              )
+            ],
+          ),
+          body: _pages.elementAt(_selectedIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.black,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.amberAccent,
+            unselectedItemColor: Colors.white,
+            selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+            onTap: _onItemTapped,
+            currentIndex: _selectedIndex,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
               ),
-              actions: [
-                IconButton(
-                  onPressed: () async {
-                    // await _auth.signOut();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const LoginScreen()),
-                    // );
-                  },
-                  // child: Text("SignOut" , style: TextStyle(
-                  //   fontSize: 15,
-                  //   color: Colors.white,
-                  //   fontFamily: "Montserrat"
-                  // ),)
-                  icon: Icon(
-                    Icons.message_rounded,
-                    size: 30,
-                  ),
-                )
-              ],
-            ),
-            body: _pages.elementAt(_selectedIndex),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.black,
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Colors.amberAccent,
-              unselectedItemColor: Colors.white,
-              selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-              onTap: _onItemTapped,
-              currentIndex: _selectedIndex,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  backgroundColor: Colors.black,
-                  icon: Icon(Icons.search),
-                  label: 'Search',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.post_add),
-                  label: 'Posts',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.account_box_outlined),
-                  label: 'Profile',
-                ),
-              ],
-            ),
-          ));
-    }
+              BottomNavigationBarItem(
+                backgroundColor: Colors.black,
+                icon: Icon(Icons.search),
+                label: 'Search',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.post_add),
+                label: 'Posts',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_box_outlined),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        ));
   }
 }
 

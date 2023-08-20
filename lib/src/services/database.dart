@@ -1,8 +1,8 @@
 import 'package:dash_chat/src/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat/src/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 FirebaseFirestore _reference = FirebaseFirestore.instance;
 
 class Database {
@@ -114,5 +114,29 @@ class Database {
                 );
           })
         });
+  }
+
+
+  Future uploadPost(File _image , String caption) async {
+    if(_image != null){
+      String uid;
+    uid = FirebaseAuth.instance.currentUser!.uid;
+    final Reference firebaseStorageRef = FirebaseStorage.instance
+        .ref()
+        .child('images')
+        .child('${DateTime.now()}.jpg');
+    await firebaseStorageRef.putFile(_image);
+    final imageUrl = await firebaseStorageRef.getDownloadURL();
+    await FirebaseFirestore.instance.collection('posts').add({
+      'caption': caption,
+      'imageUrl': imageUrl,
+      'noOfLikes' : 0,
+      'likedBy' : [],
+      'commentedBy' : [],
+      'poster_uid' : uid,
+    });
+
+    }
+    
   }
 }
