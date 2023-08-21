@@ -122,13 +122,21 @@ class _OthersProfileState extends State<OthersProfile> {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
+                      List followers = _userData["followers"];
+                      List following = _currentUserData["following"];
+                      if (followers.contains(_currentUserData["uid"])) {
+                        setState(() {
+                          timePass = false;
+                        });
+                      } else {
+                        setState(() {
+                          timePass = true;
+                        });
+                      }
                       if (timePass) {
-                        List followers = _userData["followers"];
                         followers.add(currentUid);
-                        List following = _currentUserData["following"];
-                        if (followers.contains(_currentUserData["uid"])) {
-                         
-                        }
+
+                        if (followers.contains(_currentUserData["uid"])) {}
                         following.add(_userData["uid"]);
                         dynamic update_followers = {
                           "followers": followers,
@@ -156,18 +164,14 @@ class _OthersProfileState extends State<OthersProfile> {
                         await _db.updateUser(
                             _userData["uid"], update_followers);
                       }
-
-                      setState(() {
-                        timePass = !timePass;
-                      });
                     },
-                    child: timePass
+                    child: !timePass
                         ? Text(
                             "Follow",
                             style: TextStyle(),
                           )
                         : Text("Following"),
-                    style: timePass
+                    style: !timePass
                         ? ElevatedButton.styleFrom(backgroundColor: Colors.blue)
                         : ElevatedButton.styleFrom(
                             backgroundColor: Colors.black),
@@ -206,7 +210,6 @@ class _OthersProfileState extends State<OthersProfile> {
                 ],
               ),
             )
-            
           ],
         ),
       ));

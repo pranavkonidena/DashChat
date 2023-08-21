@@ -16,10 +16,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: StreamWidget(),
-      ),
+    return Scaffold(
+      body: StreamWidget(),
     );
   }
 }
@@ -111,31 +109,33 @@ class _StreamWidgetState extends State<StreamWidget> {
                     Text("Followers "),
                     Text(_userData["followers"].length.toString()),
                   ]),
-
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                      Text("Posts" , style: TextStyle(
-                        fontSize: 40,
-                      )),
-                    ],),
-                  ),
-
-                Row(
-                  children: [
-                    for(var item in postsUrl)
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    child: Image.network(item , width: 80 , height: 80,),
-                    ),
-              ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Posts",
+                        style: TextStyle(
+                          fontSize: 40,
+                        )),
                   ],
                 ),
-                  
+              ),
+              Row(
+                children: [
+                  for (var item in postsUrl)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Image.network(
+                          item,
+                          width: 80,
+                          height: 80,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               ElevatedButton(
                   onPressed: () async {
                     Database _db = Database();
