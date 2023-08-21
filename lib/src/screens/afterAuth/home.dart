@@ -76,7 +76,6 @@ class _HomePageState extends State<HomePage> {
                     );
                   } else if (_selectedIndex == 2) {
                     //Post icon
-                    print("Posting");
                   } else {
                     //Message icon
                   }
@@ -137,14 +136,17 @@ class _StreamWidgetState extends State<StreamWidget> {
     _auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
-  void _onAuthStateChanged(User? user) async {
+  Future<void> _onAuthStateChanged(User? user) async {
     if (user != null) {
       String uid = user.uid;
-      print(uid);
+
       Database _db = Database();
       _userData = _db.fetchUserFromDB(uid).then((value) => setState(() {
             if (value != null) {
               _userData = value;
+              fetchPostsOfFollowing(_userData).then(
+                (value) {},
+              );
             } else {}
           }));
       setState(() {
@@ -160,13 +162,58 @@ class _StreamWidgetState extends State<StreamWidget> {
     }
   }
 
+  Future fetchPostsOfFollowing(dynamic userData) async {
+    List following = userData["following"];
+    dynamic temp;
+    dynamic data;
+    for (var item in following) {
+      temp = Database().fetchUserFromDB(item).then((value) {
+        if (value != null) {
+          setState(() {
+            data = value;
+            dynamic temp = (data['posts'] as List).map((ite) => ite as String);
+
+            temp = temp.toString();
+            temp = extractValue(temp);
+            postUrls.add(temp);
+          });
+        }
+      });
+    }
+    // print(postUrls);
+    return postUrls;
+  }
+
+  String extractValue(String input) {
+    int startIndex = input.indexOf("(") + 1;
+    int endIndex = input.lastIndexOf(")");
+
+    if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+      return input.substring(startIndex, endIndex);
+    } else {
+      return "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     if (_currentUser != null) {
       return Scaffold(
           body: Column(
-        children: [],
+        children: [
+          for (var item in postUrls)
+          Container(
+            child: Image.network(
+              item.toString(),
+              
+              fit: BoxFit.fitHeight,
+              width: 500,
+              height: 500,
+            ),
+            
+          )
+            
+        ],
       ));
     } else {
       return loadingScreen();
