@@ -1,11 +1,15 @@
 import 'package:dash_chat/src/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat/src/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+
 FirebaseFirestore _reference = FirebaseFirestore.instance;
 
 class Database {
+  var urlsData;
+
   Future registerToDB(MyUser user) async {
     await _reference.collection("users").add({
       "email": user.email,
@@ -88,7 +92,7 @@ class Database {
 
   Future deleteUser(String uid) async {
     await FirebaseAuth.instance.currentUser?.delete();
-
+    await AuthService().signOut();
     FirebaseFirestore.instance
         .collection("users")
         .where("uid", isEqualTo: uid)
@@ -116,27 +120,35 @@ class Database {
         });
   }
 
-
-  Future uploadPost(File _image , String caption) async {
-    if(_image != null){
+  Future uploadPost(File _image, String caption) async {
+    if (_image != null) {
       String uid;
-    uid = FirebaseAuth.instance.currentUser!.uid;
-    final Reference firebaseStorageRef = FirebaseStorage.instance
-        .ref()
-        .child('images')
-        .child('${DateTime.now()}.jpg');
-    await firebaseStorageRef.putFile(_image);
-    final imageUrl = await firebaseStorageRef.getDownloadURL();
-    await FirebaseFirestore.instance.collection('posts').add({
-      'caption': caption,
-      'imageUrl': imageUrl,
-      'noOfLikes' : 0,
-      'likedBy' : [],
-      'commentedBy' : [],
-      'poster_uid' : uid,
-    });
+      uid = FirebaseAuth.instance.currentUser!.uid;
+      final Reference firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child('${DateTime.now()}.jpg');
+      await firebaseStorageRef.putFile(_image);
+      final imageUrl = await firebaseStorageRef.getDownloadURL();
+      await FirebaseFirestore.instance.collection('posts').add({
+        'caption': caption,
+        'imageUrl': imageUrl,
+        'noOfLikes': 0,
+        'likedBy': [],
+        'commentedBy': [],
+        'uid': uid,
+      });
 
+      dynamic _userData = {};
+      _userData = await fetchUserFromDB(uid);
+      print(_userData);
+      var posts = _userData["posts"] as List;
+      print(posts);
+      posts.add(imageUrl);
+      dynamic posts_update = {
+        "posts": posts,
+      };
+      await updateUser(uid, posts_update);
     }
-    
   }
 }

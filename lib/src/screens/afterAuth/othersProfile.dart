@@ -14,6 +14,8 @@ class _OthersProfileState extends State<OthersProfile> {
   bool timePass = true;
   bool _isLoading = true;
   bool _isLoading2 = true;
+  bool _isLoading3 = true;
+  List<String> postsUrl = [];
   dynamic _userData;
   String currentUid = "";
   dynamic _currentUserData;
@@ -23,7 +25,6 @@ class _OthersProfileState extends State<OthersProfile> {
     fetchUserData(widget.username);
     currentUid = FirebaseAuth.instance.currentUser!.uid;
     fetchCurrentUserData();
-
     super.initState();
   }
 
@@ -120,11 +121,14 @@ class _OthersProfileState extends State<OthersProfile> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                      onPressed: () async {
-                        if(timePass){
-                          List followers = _userData["followers"];
+                    onPressed: () async {
+                      if (timePass) {
+                        List followers = _userData["followers"];
                         followers.add(currentUid);
                         List following = _currentUserData["following"];
+                        if (followers.contains(_currentUserData["uid"])) {
+                         
+                        }
                         following.add(_userData["uid"]);
                         dynamic update_followers = {
                           "followers": followers,
@@ -136,9 +140,8 @@ class _OthersProfileState extends State<OthersProfile> {
                         await _db.updateUser(currentUid, update_following);
                         await _db.updateUser(
                             _userData["uid"], update_followers);
-                        }
-                        else{
-                          List followers = _userData["followers"];
+                      } else {
+                        List followers = _userData["followers"];
                         followers.remove(currentUid);
                         List following = _currentUserData["following"];
                         following.remove(_userData["uid"]);
@@ -152,21 +155,58 @@ class _OthersProfileState extends State<OthersProfile> {
                         await _db.updateUser(currentUid, update_following);
                         await _db.updateUser(
                             _userData["uid"], update_followers);
-                        }
-                        
-                        setState(() {
-                          timePass = !timePass;
-                        });
-                      },
-                      child: timePass ? Text("Follow" , style: TextStyle(
-                        
-                      ),) : Text("Following"),
-                      style: timePass ? ElevatedButton.styleFrom(backgroundColor: Colors.blue) : ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                      ),
+                      }
+
+                      setState(() {
+                        timePass = !timePass;
+                      });
+                    },
+                    child: timePass
+                        ? Text(
+                            "Follow",
+                            style: TextStyle(),
+                          )
+                        : Text("Following"),
+                    style: timePass
+                        ? ElevatedButton.styleFrom(backgroundColor: Colors.blue)
+                        : ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black),
+                  ),
                   ElevatedButton(onPressed: () {}, child: Text("Message"))
                 ],
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    "Posts",
+                    style: TextStyle(
+                      fontSize: 40,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  for (var item in _userData["posts"])
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Image.network(item),
+                        height: 80,
+                        width: 80,
+                      ),
+                    )
+                ],
+              ),
             )
+            
           ],
         ),
       ));

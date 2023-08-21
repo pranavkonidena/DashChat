@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dash_chat/src/screens/afterAuth/ImageReturner.dart';
 import 'package:dash_chat/src/screens/afterAuth/loadingScreen.dart';
 import 'package:dash_chat/src/screens/beforeAuth/login.dart';
 import 'package:dash_chat/src/screens/beforeAuth/register.dart';
@@ -33,12 +34,15 @@ class StreamWidget extends StatefulWidget {
 class _StreamWidgetState extends State<StreamWidget> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = true;
+  bool _isLoading2 = true;
   dynamic _currentUser = null;
   dynamic _userData;
+  List<String> postsUrl = [];
   @override
   void initState() {
     super.initState();
     _auth.authStateChanges().listen(_onAuthStateChanged);
+    fetchPostUrls();
   }
 
   void _onAuthStateChanged(User? user) async {
@@ -65,9 +69,24 @@ class _StreamWidgetState extends State<StreamWidget> {
     }
   }
 
+  void fetchPostUrls() {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    Database _db = Database();
+    dynamic data;
+    data = _db.fetchUserFromDB(uid).then((value) => setState(() {
+          if (value != null) {
+            postsUrl =
+                (value['posts'] as List).map((item) => item as String).toList();
+            _isLoading2 = false;
+          } else {
+            _isLoading2 = true;
+          }
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!_isLoading) {
+    if (!_isLoading && !_isLoading2) {
       if (_currentUser != null) {
         return Scaffold(
           body: Column(
@@ -76,7 +95,7 @@ class _StreamWidgetState extends State<StreamWidget> {
                 _userData["username"],
                 style: const TextStyle(
                     fontFamily: "Montserrat",
-                    fontSize: 30,
+                    fontSize: 40,
                     color: Colors.black87),
               ),
               Text(_userData["bio"]),
@@ -92,6 +111,31 @@ class _StreamWidgetState extends State<StreamWidget> {
                     Text("Followers "),
                     Text(_userData["followers"].length.toString()),
                   ]),
+
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      Text("Posts" , style: TextStyle(
+                        fontSize: 40,
+                      )),
+                    ],),
+                  ),
+
+                Row(
+                  children: [
+                    for(var item in postsUrl)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    child: Image.network(item , width: 80 , height: 80,),
+                    ),
+              ),
+                  ],
+                ),
+                  
               ElevatedButton(
                   onPressed: () async {
                     Database _db = Database();

@@ -130,7 +130,7 @@ class _StreamWidgetState extends State<StreamWidget> {
   bool _isLoading = true;
   MyUser? _currentUser;
   dynamic _userData;
-
+  List postUrls = [];
   @override
   void initState() {
     super.initState();
@@ -159,6 +159,7 @@ class _StreamWidgetState extends State<StreamWidget> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
