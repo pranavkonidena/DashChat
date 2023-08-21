@@ -11,7 +11,7 @@ class OthersProfile extends StatefulWidget {
 }
 
 class _OthersProfileState extends State<OthersProfile> {
-  bool timePass = true;
+  bool timePass = false;
   bool _isLoading = true;
   bool _isLoading2 = true;
   bool _isLoading3 = true;
@@ -202,9 +202,24 @@ class _OthersProfileState extends State<OthersProfile> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        child: Image.network(item),
+                        child: Image.network(item,
+                        frameBuilder: (context, child, frame,
+                                wasSynchronouslyLoaded) {
+                          return child;
+                        }, loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }
+                        
+                        ),
                         height: 80,
                         width: 80,
+                        
                       ),
                     )
                 ],

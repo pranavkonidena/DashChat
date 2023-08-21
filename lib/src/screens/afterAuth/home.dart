@@ -151,7 +151,6 @@ class _StreamWidgetState extends State<StreamWidget> {
           }));
       setState(() {
         _currentUser = MyUser(uid);
-        _isLoading = false;
       });
     } else {
       setState(() {
@@ -166,21 +165,18 @@ class _StreamWidgetState extends State<StreamWidget> {
     List following = userData["following"];
     dynamic temp;
     dynamic data;
+    int count = 0;
     for (var item in following) {
       temp = Database().fetchUserFromDB(item).then((value) {
         if (value != null) {
           setState(() {
             data = value;
-            dynamic temp = (data['posts'] as List).map((ite) => ite as String);
-
-            temp = temp.toString();
-            temp = extractValue(temp);
-            postUrls.add(temp);
+            postUrls = data["posts"];
+            _isLoading = false;
           });
         }
       });
     }
-    // print(postUrls);
     return postUrls;
   }
 
@@ -197,23 +193,33 @@ class _StreamWidgetState extends State<StreamWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentUser != null) {
+    if (_currentUser != null && !_isLoading) {
       return Scaffold(
-          body: Column(
-        children: [
-          for (var item in postUrls)
-          Container(
-            child: Image.network(
-              item.toString(),
-              
-              fit: BoxFit.fitHeight,
-              width: 500,
-              height: 500,
-            ),
-            
-          )
-            
-        ],
+          body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: postUrls.length,
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            return Card(
+              margin: EdgeInsets.all(5),
+              child: Image.network(postUrls[index], scale: 1, frameBuilder:
+                  (context, child, frame, wasSynchronouslyLoaded) {
+                return child;
+              }, loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+            );
+          },
+        ),
       ));
     } else {
       return loadingScreen();

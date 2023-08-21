@@ -90,7 +90,9 @@ class _LoginFormState extends State<LoginForm> {
             child: TextFormField(
               decoration: const InputDecoration(
                 labelText: "Password",
+                
               ),
+              obscureText: true,
               onChanged: (value) {
                 setState(() {
                   password = value;
