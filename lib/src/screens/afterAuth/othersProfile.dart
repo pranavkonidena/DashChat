@@ -19,6 +19,7 @@ class _OthersProfileState extends State<OthersProfile> {
   dynamic _userData;
   String currentUid = "";
   dynamic _currentUserData;
+  bool _isFollowing = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -36,6 +37,16 @@ class _OthersProfileState extends State<OthersProfile> {
           if (value != null) {
             _userData = value;
             _isLoading = false;
+            if (_userData["followers"]
+                .contains(FirebaseAuth.instance.currentUser!.uid)) {
+              setState(() {
+                _isFollowing = true;
+              });
+            } else {
+              setState(() {
+                _isFollowing = false;
+              });
+            }
           } else {
             _isLoading = true;
           }
@@ -124,19 +135,8 @@ class _OthersProfileState extends State<OthersProfile> {
                     onPressed: () async {
                       List followers = _userData["followers"];
                       List following = _currentUserData["following"];
-                      if (followers.contains(_currentUserData["uid"])) {
-                        setState(() {
-                          timePass = false;
-                        });
-                      } else {
-                        setState(() {
-                          timePass = true;
-                        });
-                      }
-                      if (timePass) {
+                      if (!_isFollowing) {
                         followers.add(currentUid);
-
-                        if (followers.contains(_currentUserData["uid"])) {}
                         following.add(_userData["uid"]);
                         dynamic update_followers = {
                           "followers": followers,
@@ -148,6 +148,9 @@ class _OthersProfileState extends State<OthersProfile> {
                         await _db.updateUser(currentUid, update_following);
                         await _db.updateUser(
                             _userData["uid"], update_followers);
+                        setState(() {
+                          _isFollowing = true;
+                        });
                       } else {
                         List followers = _userData["followers"];
                         followers.remove(currentUid);
@@ -163,15 +166,18 @@ class _OthersProfileState extends State<OthersProfile> {
                         await _db.updateUser(currentUid, update_following);
                         await _db.updateUser(
                             _userData["uid"], update_followers);
+                        setState(() {
+                          _isFollowing = false;
+                        });
                       }
                     },
-                    child: !timePass
+                    child: !_isFollowing
                         ? Text(
                             "Follow",
                             style: TextStyle(),
                           )
                         : Text("Following"),
-                    style: !timePass
+                    style: !_isFollowing
                         ? ElevatedButton.styleFrom(backgroundColor: Colors.blue)
                         : ElevatedButton.styleFrom(
                             backgroundColor: Colors.black),
@@ -202,9 +208,8 @@ class _OthersProfileState extends State<OthersProfile> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        child: Image.network(item,
-                        frameBuilder: (context, child, frame,
-                                wasSynchronouslyLoaded) {
+                        child: Image.network(item, frameBuilder:
+                            (context, child, frame, wasSynchronouslyLoaded) {
                           return child;
                         }, loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
@@ -214,12 +219,9 @@ class _OthersProfileState extends State<OthersProfile> {
                               child: CircularProgressIndicator(),
                             );
                           }
-                        }
-                        
-                        ),
+                        }),
                         height: 80,
                         width: 80,
-                        
                       ),
                     )
                 ],

@@ -127,6 +127,7 @@ class StreamWidget extends StatefulWidget {
 class _StreamWidgetState extends State<StreamWidget> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = true;
+  bool _noPosts = false;
   MyUser? _currentUser;
   dynamic _userData;
   List postUrls = [];
@@ -174,6 +175,10 @@ class _StreamWidgetState extends State<StreamWidget> {
             postUrls = data["posts"];
             _isLoading = false;
           });
+        } else {
+          setState(() {
+            _noPosts = true;
+          });
         }
       });
     }
@@ -193,7 +198,7 @@ class _StreamWidgetState extends State<StreamWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentUser != null && !_isLoading) {
+    if (_currentUser != null && !_isLoading && !_noPosts) {
       return Scaffold(
           body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -222,7 +227,9 @@ class _StreamWidgetState extends State<StreamWidget> {
         ),
       ));
     } else {
-      return loadingScreen();
+      return Scaffold(
+        body: Text("No posts to display , please follow someone before seeing posts here"),
+      );
     }
   }
 }
