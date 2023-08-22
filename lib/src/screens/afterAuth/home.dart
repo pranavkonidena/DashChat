@@ -166,15 +166,24 @@ class _StreamWidgetState extends State<StreamWidget> {
     List following = userData["following"];
     dynamic temp;
     dynamic data;
+    List tempList = [];
     int count = 0;
     for (var item in following) {
       temp = Database().fetchUserFromDB(item).then((value) {
         if (value != null) {
-          setState(() {
-            data = value;
-            postUrls = data["posts"];
-            _isLoading = false;
-          });
+          // setState(() {
+          //   data = value;
+          //   print(data["posts"]);
+          // });
+          data = value;
+          for (var i in data["posts"]) {
+            tempList.insert(0, i);
+            print(tempList);
+            setState(() {
+              postUrls = tempList;
+              print(postUrls.length);
+            });
+          }
         } else {
           setState(() {
             _noPosts = true;
@@ -182,6 +191,11 @@ class _StreamWidgetState extends State<StreamWidget> {
         }
       });
     }
+
+    // setState(() {
+    //   _isLoading = false;
+    // });
+
     return postUrls;
   }
 
@@ -198,7 +212,7 @@ class _StreamWidgetState extends State<StreamWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentUser != null && !_isLoading && !_noPosts) {
+    if (_currentUser != null && !_isLoading ||  !_noPosts) {
       return Scaffold(
           body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -228,7 +242,8 @@ class _StreamWidgetState extends State<StreamWidget> {
       ));
     } else {
       return Scaffold(
-        body: Text("No posts to display , please follow someone before seeing posts here"),
+        body: Text(
+            "No posts to display , please follow someone before seeing posts here"),
       );
     }
   }
