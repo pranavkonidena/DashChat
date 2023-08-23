@@ -101,6 +101,16 @@ flutter:
       fonts:
         - asset: assets/fonts/ShadowsIntoLight-Regular.ttf
           weight: 400
+    - family: DancingScript
+      fonts:
+        - asset: assets/fonts/DancingScript-VariableFont_wght.ttf
+          weight: 400
+    - family: Pragati
+      fonts:
+        - asset: assets/fonts/PragatiNarrow-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PragatiNarrow-Bold.ttf
+          weight: 700
  
 
   #         style: italic

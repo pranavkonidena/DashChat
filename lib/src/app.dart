@@ -1,12 +1,5 @@
-import 'package:dash_chat/src/constants/routes.dart';
 import 'package:dash_chat/src/screens/afterAuth/home.dart';
-import 'package:dash_chat/src/screens/afterAuth/loadingScreen.dart';
-import 'package:dash_chat/src/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'screens/beforeAuth/register.dart';
-import './screens/wrapper.dart';
-import './models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'screens/beforeAuth/login.dart';
 
@@ -15,21 +8,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home:  StreamBuilder<User?>(
-        stream: _auth.authStateChanges(),
+        stream: auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final user = snapshot.data;
             if (user != null) {
-              return HomePage(); // Pass the user to the HomePage
+              return const HomePage(); // Pass the user to the HomePage
             } else {
-              return LoginScreen();
+              return const LoginScreen();
             }
           } else {
-            return LoginScreen();
+            return const LoginScreen();
           }
         },
       ),

@@ -10,18 +10,26 @@ FirebaseFirestore _reference = FirebaseFirestore.instance;
 class Database {
   var urlsData;
 
-  Future registerToDB(MyUser user) async {
-    await _reference.collection("users").add({
-      "email": user.email,
-      "password": user.password,
-      "username": user.username,
-      "uid": user.uid,
-      "bio": user.bio,
-      "postNums": 0,
-      "followers": [],
-      "following": [],
-      "posts": [],
-    });
+  Future registerToDB(MyUser user, File _image) async {
+    if (_image != null) {
+      final Reference firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('profilePics')
+          .child('${user.username}.jpg');
+      await firebaseStorageRef.putFile(_image);
+      final imageUrl = await firebaseStorageRef.getDownloadURL();
+      await _reference.collection("users").add({
+        "email": user.email,
+        "username": user.username,
+        "uid": user.uid,
+        "bio": user.bio,
+        "postNums": 0,
+        "followers": [],
+        "following": [],
+        "posts": [],
+        "imageUrl" : imageUrl,
+      });
+    }
   }
 
   Future<dynamic> fetchUserFromDB(String uid) async {
@@ -123,7 +131,10 @@ class Database {
   Future uploadPost(File _image, String caption) async {
     if (_image != null) {
       String uid;
+      dynamic temp;
+
       uid = FirebaseAuth.instance.currentUser!.uid;
+      temp = await fetchUserFromDB(uid);
       final Reference firebaseStorageRef = FirebaseStorage.instance
           .ref()
           .child('images')
@@ -137,6 +148,7 @@ class Database {
         'likedBy': [],
         'commentedBy': [],
         'uid': uid,
+        'username': temp["username"]
       });
 
       dynamic _userData = {};
@@ -149,6 +161,32 @@ class Database {
         "posts": posts,
       };
       await updateUser(uid, posts_update);
+    }
+  }
+
+  Future<dynamic> fetchPostsFromDB(String postUrl) async {
+    try {
+      // Reference to the Firestore collection 'users'
+      CollectionReference usersCollection =
+          FirebaseFirestore.instance.collection('posts');
+
+      // Query to retrieve data where 'uid' field matches the provided UID
+      QuerySnapshot querySnapshot =
+          await usersCollection.where('imageUrl', isEqualTo: postUrl).get();
+
+      // Process the querySnapshot to get documents and data
+      if (querySnapshot.docs.isNotEmpty) {
+        for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data =
+              docSnapshot.data() as Map<String, dynamic>;
+          // Use the data as needed
+          return data;
+        }
+      } else {
+        print('No matching documents');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
     }
   }
 }

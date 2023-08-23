@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user.dart';
 
 class AuthService {
-  
   // Stream<User>? get user {
   //   _auth.authStateChanges().listen((
   //     User? user,
@@ -20,10 +19,10 @@ class AuthService {
   }
 
   Future registerWithEmail(String email, String password) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
-      final result = await _auth.createUserWithEmailAndPassword(
+      final result = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       return convertToUser(result);
     } on FirebaseAuthException catch (e) {
@@ -32,10 +31,10 @@ class AuthService {
   }
 
   Future loginWithEmail(String email, String password) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
-      final result = await _auth.signInWithEmailAndPassword(
+      final result = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       return convertToUser(result);
     } on FirebaseAuthException catch (e) {
@@ -44,13 +43,7 @@ class AuthService {
   }
 
   Future signOut() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    await _auth.signOut();
-    try {
-      
-    } catch (e) {
-      print("Error");
-      print(e);
-    }
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    await auth.signOut();
   }
 }

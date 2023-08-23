@@ -14,44 +14,57 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   @override
   Widget build(BuildContext context) {
-    
-
     return MaterialApp(
         routes: routes,
-        
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
-
+            backgroundColor: Colors.black,
             body: Column(
-              
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('assets/login.png')),
-      ),
-            ),
-            const Center(
-                child: Text("Welcome Back",
-                    style:
-                        TextStyle(fontSize: 50, fontFamily: 'Montserrat',))),
-            const LoginForm(),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterScreen()),
-                  );
-                },
-                child: const Text("SignUp"))
-          ],
-        ))
-        );
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    image:
+                        DecorationImage(image: AssetImage('assets/login.png')),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 66.0),
+                  child: Text("DashChat",
+                      style: TextStyle(
+                          fontSize: 50,
+                          fontFamily: 'DancingScript',
+                          color: Colors.white)),
+                ),
+                const LoginForm(),
+                Padding(
+                  padding: const EdgeInsets.only(top : 80.0),
+                  child: SizedBox(
+                    width: 1000,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black
+                      ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterScreen()),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          Text("Don't have an account? "),
+                          Text("Sign Up" , style: TextStyle(color: Colors.blue),),
+                        ]),
+                     ) ),
+                )
+              ],
+            )));
   }
 }
 
@@ -63,7 +76,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  
   String email = "";
   String password = "";
   final _formKey = GlobalKey<FormState>();
@@ -75,10 +87,16 @@ class _LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextFormField(
-              decoration: const InputDecoration(
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              decoration: InputDecoration(
                 labelText: "Email",
+                filled: true,
+                fillColor: Color.fromRGBO(57, 53, 53, 2),
+                labelStyle: TextStyle(color: Colors.white),
               ),
               onChanged: (value) {
                 setState(() {
@@ -94,12 +112,18 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: "Password",
+              style: TextStyle(
+                color: Colors.white,
               ),
-               obscureText: true,
+              decoration: InputDecoration(
+                labelText: "Password",
+                labelStyle: TextStyle(color: Colors.white),
+                filled: true,
+                fillColor: Color.fromRGBO(57, 53, 53, 2),
+              ),
+              obscureText: true,
               onChanged: (value) {
                 setState(() {
                   password = value;
@@ -114,27 +138,31 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    AuthService _auth = AuthService();
-                    try {
-                      dynamic user =
-                          await _auth.loginWithEmail(email, password);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()));
-                    } catch (e) {
-                      dynamic error = SnackBar(
-                        content: Text(e.toString()),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(error);
+            padding: const EdgeInsets.all(15.0),
+            child: SizedBox(
+              width: 1000,
+              height: 50,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      AuthService _auth = AuthService();
+                      try {
+                        dynamic user =
+                            await _auth.loginWithEmail(email, password);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomePage()));
+                      } catch (e) {
+                        dynamic error = SnackBar(
+                          content: Text(e.toString()),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(error);
+                      }
                     }
-                  }
-                },
-                child: const Text("Login")),
+                  },
+                  child: const Text("Log in")),
+            ),
           )
         ],
       ),
